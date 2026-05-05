@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="auth-bg">
+
+<div class="navbar">
+    <div class="logo">
+        <img src="images/logo.png">
+        <span>Campus Events</span>
+    </div>
+</div>
+
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>Welcome Back 🎓</h2>
+        <p>Login to continue</p>
+        <p id="message" style="color: yellow; font-weight: bold;"></p>
+
+      <form action="php/loginUser.php" method="POST">
+    <p id="message" style="color: yellow;"></p>
+
+    <input type="email" name="email" placeholder="Enter Email" required>
+    <input type="password" name="password" placeholder="Enter Password" required>
+
+    <button type="submit">Login</button>
+</form>
+
+        <p style="margin-top:15px;">
+            Don't have an account? <a href="register.html">Register</a>
+        </p>
+    </div>
+</div>
+
+</body>
+<script>
+const params = new URLSearchParams(window.location.search);
+const error = params.get("error");
+
+const message = document.getElementById("message");
+
+if(error === "wrong_password"){
+    message.innerText = "❌ Incorrect Password";
+}
+else if(error === "user_not_found"){
+    message.innerText = "❌ User not registered";
+}
+</script>
+</html>

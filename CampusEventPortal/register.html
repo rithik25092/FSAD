@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Register</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="auth-bg">
+
+<div class="navbar">
+    <div class="logo">
+        <img src="images/logo.png">
+        <span>Campus Events</span>
+    </div>
+</div>
+
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>Create Account ✨</h2>
+
+        <form action="php/registerUser.php" method="POST">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+
+        <p style="margin-top:15px;">
+            Already have an account? <a href="login.html">Login</a>
+        </p>
+<p id="message" style="color: yellow;"></p>
+    </div>
+</div>
+
+</body>
+<script>
+const params = new URLSearchParams(window.location.search);
+
+const error = params.get("error");
+const success = params.get("success");
+
+const message = document.getElementById("message");
+
+if(error === "exists"){
+    message.innerText = "❌ User already registered";
+}
+if(success === "registered"){
+    message.innerText = "✅ Registration successful. Please login.";
+}
+</script>
+</html>
