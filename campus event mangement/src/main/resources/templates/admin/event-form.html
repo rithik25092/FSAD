@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${event.id == null ? 'Create Event' : 'Edit Event'}">Event Form</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="mb-3">
+        <a th:href="@{/admin/events}" class="btn btn-link px-0 text-decoration-none">&leftarrow; Back to Events</a>
+    </div>
+
+    <div class="card shadow-sm mx-auto" style="max-width: 800px;">
+        <div class="card-body p-5">
+            <h3 class="card-title mb-4" th:text="${event.id == null ? 'Create New Event' : 'Edit Event'}">Event Form</h3>
+            
+            <form th:action="@{${event.id == null ? '/admin/events' : '/admin/events/' + event.id}}" method="post" th:object="${event}">
+                <input th:if="${event.id != null}" type="hidden" name="_method" value="put"/>
+                <input th:if="${event.id != null}" type="hidden" th:field="*{id}" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Event Title</label>
+                    <input type="text" class="form-control" th:field="*{title}" required>
+                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Event Type</label>
+                        <select class="form-select" th:field="*{eventType}" required>
+                            <option value="">Select Type</option>
+                            <option th:each="t : ${eventTypes}" th:value="${t}" th:text="${t}"></option>
+                        </select>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('eventType')}" th:errors="*{eventType}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Department</label>
+                        <input type="text" class="form-control" th:field="*{department}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Event Date & Time</label>
+                        <input type="datetime-local" class="form-control" th:field="*{eventDate}" required>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('eventDate')}" th:errors="*{eventDate}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Max Capacity</label>
+                        <input type="number" class="form-control" th:field="*{maxCapacity}" min="1" required>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('maxCapacity')}" th:errors="*{maxCapacity}"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Venue</label>
+                    <input type="text" class="form-control" th:field="*{venue}" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Description</label>
+                    <textarea class="form-control" th:field="*{description}" rows="5"></textarea>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <a th:href="@{/admin/events}" class="btn btn-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary" th:text="${event.id == null ? 'Create Event' : 'Save Changes'}">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

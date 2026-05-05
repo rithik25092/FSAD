@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${event.title}">Event Details</title>
+</head>
+<body>
+<div layout:fragment="content">
+    
+    <div class="mb-3">
+        <a th:href="@{/student/events}" class="btn btn-link px-0 text-decoration-none">&leftarrow; Back to Events</a>
+    </div>
+
+    <div th:if="${successMsg}" class="alert alert-success" th:text="${successMsg}"></div>
+    <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h2 class="card-title mb-0" th:text="${event.title}">Title</h2>
+                        <div>
+                            <span class="badge bg-primary" th:text="${event.eventType}">Type</span>
+                            <span class="badge bg-secondary" th:text="${event.department}">Dept</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-muted mb-1">
+                            <i class="bi bi-calendar"></i> <strong>Date & Time:</strong> <span th:text="${#temporals.format(event.eventDate, 'dd MMM yyyy, hh:mm a')}">Date</span>
+                        </p>
+                        <p class="text-muted mb-1">
+                            <i class="bi bi-geo-alt"></i> <strong>Venue:</strong> <span th:text="${event.venue}">Venue</span>
+                        </p>
+                        <p class="text-muted mb-1" th:if="${avgRating > 0}">
+                            <i class="bi bi-star-fill text-warning"></i> <strong>Rating:</strong> <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}">4.5</span> / 5.0
+                        </p>
+                    </div>
+
+                    <h5>Description</h5>
+                    <p class="card-text" th:text="${event.description}">Description text.</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4" th:if="${canFeedback}">
+                <div class="card-body">
+                    <h5 class="card-title">Leave Feedback</h5>
+                    <form th:action="@{/student/feedback/{id}(id=${event.id})}" method="post" th:object="${feedback}">
+                        <div class="mb-3">
+                            <label class="form-label">Rating (1-5)</label>
+                            <input type="number" class="form-control" th:field="*{rating}" min="1" max="5" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comments</label>
+                            <textarea class="form-control" th:field="*{comments}" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4 sticky-top" style="top: 2rem;">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Registration</h5>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Spots Filled</span>
+                            <span class="fw-bold"><span th:text="${event.currentRegistrations}"></span> / <span th:text="${event.maxCapacity}"></span></span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-primary" role="progressbar" th:style="'width: ' + (${event.maxCapacity} > 0 ? (${event.currentRegistrations} * 100 / ${event.maxCapacity}) : 0) + '%'"></div>
+                        </div>
+                    </div>
+
+                    <div th:if="${isRegistered}">
+                        <div class="alert alert-success mt-3 text-center">
+                            <i class="bi bi-check-circle-fill"></i> You are registered!
+                        </div>
+                        <p class="text-muted small text-center">View your ticket in <a th:href="@{/student/my-registrations}">My Registrations</a>.</p>
+                    </div>
+                    
+                    <div th:unless="${isRegistered}">
+                        <div th:if="${event.currentRegistrations >= event.maxCapacity}" class="alert alert-warning text-center">
+                            Event is Full
+                        </div>
+                        <form th:unless="${event.currentRegistrations >= event.maxCapacity}" th:action="@{/student/events/{id}/register(id=${event.id})}" method="post">
+                            <button type="submit" class="btn btn-primary w-100 btn-lg">Register Now</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

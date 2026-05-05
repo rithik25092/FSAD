@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Admin Dashboard</h2>
+        <a th:href="@{/admin/events/new}" class="btn btn-primary">Create New Event</a>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card bg-dark text-white shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Active Events</h5>
+                    <p class="card-text fs-1" th:text="${totalEvents}">0</p>
+                    <a th:href="@{/admin/events}" class="btn btn-light mt-2">Manage All Events</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">View All Stats</h5>
+                    <p class="card-text fs-6 mt-3">Monitor event capacities and student feedback.</p>
+                    <a th:href="@{/admin/statistics}" class="btn btn-light mt-3">View Statistics</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Top Events Summary</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th>Event</th>
+                    <th>Registrations</th>
+                    <th>Capacity</th>
+                    <th>Fill %</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="s : ${stats}">
+                    <td th:text="${s.title}">Title</td>
+                    <td th:text="${s.currentRegistrations}">0</td>
+                    <td th:text="${s.maxCapacity}">0</td>
+                    <td>
+                        <div class="progress" style="height: 15px;">
+                            <div class="progress-bar bg-success" role="progressbar" th:style="'width: ' + ${s.fillPercentage} + '%'" th:text="${#numbers.formatDecimal(s.fillPercentage, 1, 1)} + '%'"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(stats)}">
+                    <td colspan="4" class="text-center py-4">No events found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

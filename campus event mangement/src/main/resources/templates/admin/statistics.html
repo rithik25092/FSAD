@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Event Statistics</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4">Global Event Statistics</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Registrations</th>
+                            <th>Capacity</th>
+                            <th style="width: 20%">Fill %</th>
+                            <th>Avg Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="s : ${stats}">
+                            <td class="fw-bold" th:text="${s.title}">Title</td>
+                            <td th:text="${s.currentRegistrations}">0</td>
+                            <td th:text="${s.maxCapacity}">0</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1 me-2" style="height: 12px;">
+                                        <div class="progress-bar" 
+                                             th:classappend="${s.fillPercentage > 90 ? 'bg-danger' : (s.fillPercentage > 60 ? 'bg-warning' : 'bg-success')}" 
+                                             role="progressbar" 
+                                             th:style="'width: ' + ${s.fillPercentage} + '%'"></div>
+                                    </div>
+                                    <small th:text="${#numbers.formatDecimal(s.fillPercentage, 1, 1)} + '%'"></small>
+                                </div>
+                            </td>
+                            <td>
+                                <span th:if="${s.averageRating > 0}" class="text-warning fw-bold">
+                                    <i class="bi bi-star-fill"></i> <span th:text="${#numbers.formatDecimal(s.averageRating, 1, 1)}">4.5</span>
+                                </span>
+                                <span th:unless="${s.averageRating > 0}" class="text-muted small">N/A</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(stats)}">
+                            <td colspan="5" class="text-center py-4 text-muted">No statistics available yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

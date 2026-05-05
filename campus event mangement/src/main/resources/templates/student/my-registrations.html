@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>My Registrations</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4">My Registrations</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Status</th>
+                            <th>Event Name</th>
+                            <th>Date</th>
+                            <th>Venue</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="r : ${registrations}">
+                            <td>
+                                <span th:if="${r.status.name() == 'CONFIRMED'}" class="badge bg-success">CONFIRMED</span>
+                                <span th:if="${r.status.name() == 'CANCELLED'}" class="badge bg-danger">CANCELLED</span>
+                            </td>
+                            <td th:text="${r.event.title}">Title</td>
+                            <td th:text="${#temporals.format(r.event.eventDate, 'dd MMM yyyy, hh:mm a')}">Date</td>
+                            <td th:text="${r.event.venue}">Venue</td>
+                            <td>
+                                <a th:href="@{/student/events/{id}(id=${r.event.id})}" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(registrations)}">
+                            <td colspan="5" class="text-center py-4 text-muted">You have no registrations yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
